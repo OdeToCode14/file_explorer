@@ -17,8 +17,8 @@
 using namespace std;
 
 
-#define is_directory 0;
-#define is_file 1;
+static const int is_directory =0;
+static const int is_file= 1;
 
 
 

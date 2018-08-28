@@ -172,7 +172,8 @@ int main(int argc, char *argv[]) {
             break;
         }
         else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
-          clear_screen();
+          //clear_screen();
+          enter();
         }
         else if (c == KEY_UP) {
             //cursorup(1);

@@ -27,6 +27,9 @@ vector<FileSystem> file_system_list;
 
 
 void move_cursor_down(){
+	if(display_index + cursor_position-top + 1 == file_system_list.size()){ // if there is nothing to scroll below
+		return;
+	}
 	cursor_position++;
 	if(cursor_position!=bottom+1){
 		movecursor(cursor_position,0);
@@ -70,8 +73,8 @@ void initialize(DIR *dp,string name){
 	display_index=0;
 
 	display_list(file_system_list);
-	movecursor(top,1);
-	cursor_position=top;
+	//movecursor(top,1);   //change this
+	//cursor_position=top;  //this also
 }
 
 void scroll_down(){
@@ -90,8 +93,8 @@ void scroll_down(){
 	if(display_index < file_system_list.size()){
 		display_list(file_system_list);
 	}
-	movecursor(top,1);
-	cursor_position=top;
+	//movecursor(top,1);
+	//cursor_position=top;
 }
 
 void scroll_up(){
@@ -117,10 +120,16 @@ void scroll_up(){
 
 void display_list(vector<FileSystem> file_system_list){
 	  int size=file_system_list.size();
+      bool displayed_something=false;
       for(int i=display_index; i<size && cursor_position<=bottom ;i++){
+      	displayed_something=true;
       	movecursor(cursor_position,1);
       	file_system_list[i].display();
       	cursor_position++;
+      }
+      if(displayed_something == true){
+      	cursor_position--;
+      	movecursor(cursor_position,1);
       }
 }
 
@@ -139,4 +148,30 @@ void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/
     printf ("lines %d\n", terminal_size.ws_row);
     printf ("columns %d\n", terminal_size.ws_col);
     
+}
+
+
+//code for entering into directory
+
+void enter(){
+	int pos=display_index+cursor_position-top;
+	FileSystem file_clicked=file_system_list[pos];
+	if(file_clicked.type == is_directory){
+		string name=root+"/"+file_clicked.file_name;
+        
+		char cwd[name.size() + 1];
+		name.copy(cwd, name.size() + 1);
+		cwd[name.size()] = '\0';
+		DIR* dp;
+		if ((dp = opendir(cwd)) == NULL){
+		    //printf("can’t open %s\n", cwd);
+		    cout<<"can’t open "<<name<<"\n";
+		    return;
+		}
+		    
+		initialize(dp,name);
+	}
+	else{ // code for opening file
+
+	}
 }

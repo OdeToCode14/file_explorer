@@ -37,7 +37,7 @@ vector<FileSystem> create_list(DIR *dp){
             string file_name=dirp->d_name;
             struct stat st;
             if(stat(file_name.c_str(), &st) != 0) {
-              cout<<"ERROR FILE DOES NOT EXIST\n";
+              cout<<"ERROR FILE DOES NOT EXIST"<<file_name<<"\n";
               return file_system_list;
             }
             

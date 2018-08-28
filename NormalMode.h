@@ -36,5 +36,7 @@ void scroll_up();
 
 void terminal_dimensions(void);
 
+void enter();
+
 
 #endif

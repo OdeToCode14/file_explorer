@@ -48,8 +48,7 @@ void FileSystem::display(){
 	    cout<< user->pw_name<<" ";
 	    cout<< group->gr_name<<" ";
 	    cout<< file_name << " --- ";
-	    cout<< file_size << " --- ";
-	            
+	    cout<< file_size << " --- ";        
 	    cout<< date << " --- "<<"\n";
 
     }
