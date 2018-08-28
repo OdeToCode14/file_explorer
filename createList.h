@@ -21,7 +21,7 @@
 using namespace std;
 
 
-vector<FileSystem> create_list(DIR*);
+vector<FileSystem> create_list(DIR*,FileSystem opened_dir);
 
 void display_list();
 

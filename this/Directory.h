@@ -1,5 +1,5 @@
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
+#ifndef DIRECTORY_H
+#define DIRECTORY_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,8 +17,8 @@
 using namespace std;
 
 
-static const int is_directory =0;
-static const int is_file= 1;
+#define is_directory 0;
+#define is_file 1;
 
 
 
@@ -33,17 +33,13 @@ public:
   struct stat st;
 
   int type;
-  string directory_path;
-  string parent_path;
 
 public:
-  FileSystem();
-  FileSystem(struct stat st,string name,string directory_path,string parent_path);
+  FileSystem(struct stat st,string name);
   void display();
   
 
 };
-
 
 
 #endif

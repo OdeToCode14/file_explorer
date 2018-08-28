@@ -40,6 +40,8 @@ static int kbhit(void);
 static int kbesc(void);
 static int kbget(void);
 
+FileSystem home_directory;
+
 static int getch(void)
 {
     int c = 0;
@@ -110,7 +112,15 @@ static int kbget(void)
     return (c == KEY_ESCAPE) ? kbesc() : c;
 }
 
-
+string get_directory_name_from_path(string current){
+  string directory_name;
+  int ind=current.length()-1;
+  while(ind >=0 && current[ind]!='/'){
+    ind--;
+  }
+  directory_name=current.substr(ind + 1);
+  return directory_name;
+}
 
 int main(int argc, char *argv[]) {
     clear_screen();
@@ -131,13 +141,37 @@ int main(int argc, char *argv[]) {
        return 1;
    }
 
+  
+   
     // alternate way use opendir(".")
     if ((dp = opendir(cwd)) == NULL){
       //printf("can’t open %s\n", cwd);
       cout<<"can’t open "<<current<<"\n";
+    }  
+
+
+    struct stat st;
+    string directory_name=get_directory_name_from_path(current);
+    FileSystem dir(st,directory_name,current,current);
+    initialize(dp,directory_name,dir);
+/*
+    cout<<current.c_str()<<"\n";
+    usleep(1000);
+    if(stat(current.c_str(), &st) != 0){
+      //home_directory.st=st;
+      directory_name=get_directory_name_from_path(current);
+      home_directory.file_name=directory_name;
+      home_directory.directory_path=current;  // considering parent of home is home itself
+      home_directory.parent_path=current;
+      FileSystem dir(st,directory_name,current,current);
+      home_directory=dir;
+      initialize(dp,directory_name,home_directory);
     }
+    else{
+      cout<<"Error\n";
+    }
+   */
     
-    initialize(dp,current);
     
    /*char cwd[PATH_MAX];
    string current;

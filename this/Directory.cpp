@@ -1,6 +1,5 @@
-
 #include "createList.h"
-#include "FileSystem.h"
+#include "Directory.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,18 +16,21 @@
 
 using namespace std;
 
-FileSystem::FileSystem(){
-
-}
-
-FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_path){
+/*
+	public:
+		string file_name;
+		off_t file_size;
+        struct passwd *user;
+        struct group  *group;
+        time_t modified_time;
+        struct stat* st;*/
+    
+    Directory::Directory(struct stat ini,string name){
     	st=ini;
     	file_name=name;
-    	directory_path=dir_path;
-    	parent_path=par_path;
     }
 
-void FileSystem::display(){
+    void Directory::display(){
     	file_size = st.st_size;   
 	    modified_time=st.st_mtime;
 
@@ -53,7 +55,10 @@ void FileSystem::display(){
 	    cout<< user->pw_name<<" ";
 	    cout<< group->gr_name<<" ";
 	    cout<< file_name << " --- ";
-	    cout<< file_size << " --- ";        
+	    cout<< file_size << " --- ";
+	            
 	    cout<< date << " --- "<<"\n";
 
     }
+    
+

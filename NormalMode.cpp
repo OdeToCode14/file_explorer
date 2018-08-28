@@ -24,6 +24,7 @@ struct winsize terminal_size;
 string root;
 
 vector<FileSystem> file_system_list;
+FileSystem current_directory;
 
 
 void move_cursor_down(){
@@ -53,8 +54,9 @@ void clear_screen(){
     printf("\033[J");
 }
 
-void initialize(DIR *dp,string name){
+void initialize(DIR *dp,string name,FileSystem current_dir){
     root=name;	
+    current_directory=current_dir;
 	terminal_dimensions();
 	//list_size=file_system_list.size();
 
@@ -62,7 +64,7 @@ void initialize(DIR *dp,string name){
               // leave two lines above one for application name other empty
               // leave three lines below one for cmd one above it one below
 	clear_screen();
-	file_system_list=create_list(dp);
+	file_system_list=create_list(dp,current_directory);
 
     cout<<"Current working dir: "<<root<<"\n";
 	top=3;
@@ -133,10 +135,6 @@ void display_list(vector<FileSystem> file_system_list){
       }
 }
 
-void open_folder(DIR *dp){
-	create_list(dp);
-}
-
 /*
 void display_list(){      
 
@@ -157,19 +155,19 @@ void enter(){
 	int pos=display_index+cursor_position-top;
 	FileSystem file_clicked=file_system_list[pos];
 	if(file_clicked.type == is_directory){
-		string name=root+"/"+file_clicked.file_name;
+		string path=file_clicked.directory_path;
         
-		char cwd[name.size() + 1];
-		name.copy(cwd, name.size() + 1);
-		cwd[name.size()] = '\0';
+		char cwd[path.size() + 1];
+		path.copy(cwd, path.size() + 1);
+		cwd[path.size()] = '\0';
 		DIR* dp;
 		if ((dp = opendir(cwd)) == NULL){
 		    //printf("can’t open %s\n", cwd);
-		    cout<<"can’t open "<<name<<"\n";
+		    cout<<"can’t open "<<path<<"\n";
 		    return;
 		}
 		    
-		initialize(dp,name);
+		initialize(dp,file_clicked.file_name,file_clicked);
 	}
 	else{ // code for opening file
 

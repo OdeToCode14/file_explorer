@@ -27,28 +27,31 @@ using namespace std;
 
 //struct winsize terminal_size;  // for terminal dimensions
 
-vector<FileSystem> create_list(DIR *dp){
+vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){
       vector<FileSystem> file_system_list;
+      FileSystem opened_directory=opened_dir;
       struct dirent *dirp;
       
       
       while ((dirp = readdir(dp)) != NULL){
             //cout<<"here\n";
             string file_name=dirp->d_name;
+            string path_name=opened_dir.directory_path+"/"+file_name;
             struct stat st;
-            if(stat(file_name.c_str(), &st) != 0) {
+            //file_name.c_str()
+            if(stat(path_name.c_str(), &st) != 0) {
               cout<<"ERROR FILE DOES NOT EXIST"<<file_name<<"\n";
               return file_system_list;
             }
             
             if(S_ISDIR(st.st_mode)){
-                  FileSystem obj(st,file_name);
+                  FileSystem obj(st,file_name,path_name,opened_dir.directory_path);
                   obj.type=is_directory;
                   file_system_list.push_back(obj);
                   //obj.display();
             }
             else{
-                  FileSystem obj(st,file_name);
+                  FileSystem obj(st,file_name,path_name,opened_dir.directory_path);
                   obj.type=is_file;
                   file_system_list.push_back(obj);
                   //obj.display();

@@ -24,11 +24,10 @@ void move_cursor_down();
 void move_cursor_up();
 void clear_screen();
 
-void initialize(DIR *dp,string root);
+void initialize(DIR *dp,string name,FileSystem current_dir);
 
 void display_list(vector<FileSystem> file_System_list);
 
-void open_folder(DIR *dp);
 void scroll_down();
 void scroll_up();
 
