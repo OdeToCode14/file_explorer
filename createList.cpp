@@ -23,9 +23,12 @@
 
 using namespace std;
 
-
+FileSystem home_directory;
 
 //struct winsize terminal_size;  // for terminal dimensions
+
+
+
 
 string get_directory_name_from_path(string current){
   string directory_name;

@@ -5,7 +5,7 @@
 
 #include <dirent.h>
 #include <termios.h>
-
+#include <stdlib.h>
 #include <sys/ioctl.h> // for terminal_dimensions
 
 #define movecursor(x,y) printf("\033[%d;%dH", x,y);
@@ -159,6 +159,9 @@ void enter(){
 	int pos=display_index+cursor_position-top;
 	FileSystem file_clicked=file_system_list[pos];
 	if(file_clicked.type == is_directory){
+		if(file_clicked.directory_path.length() < home_directory.directory_path.length()){
+			return;
+		}
 		string path=file_clicked.directory_path;
 		string real_name=file_clicked.file_name;
 
@@ -187,6 +190,12 @@ void enter(){
 		initialize(dp,real_name,file_clicked);
 	}
 	else{ // code for opening file
-
+		 string inp="​xdg-open "+file_clicked.directory_path;
+		  
+		  int x;
+		  
+		  char t1[100];
+		  strcpy(t1,inp.c_str());
+		  system(t1);
 	}
 }

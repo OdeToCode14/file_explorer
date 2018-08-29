@@ -20,6 +20,8 @@
 
 using namespace std;
 
+extern FileSystem home_directory; // represents path to home of application
+
 string get_directory_name_from_path(string current);
 
 string find_directory_for_special_dot(string str);

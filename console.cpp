@@ -40,7 +40,7 @@ static int kbhit(void);
 static int kbesc(void);
 static int kbget(void);
 
-FileSystem home_directory;
+
 
 static int getch(void)
 {
@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
     struct stat st;
     string directory_name=get_directory_name_from_path(current);
     FileSystem dir(st,directory_name,current,current,directory_name);
+    home_directory=dir;
     initialize(dp,directory_name,dir);
 /*
     cout<<current.c_str()<<"\n";
