@@ -88,10 +88,10 @@ static int kbesc(void)
                 c = KEY_DOWN;
                 break;
             case 'C':
-                c = KEY_LEFT;
+                c = KEY_RIGHT;
                 break;
             case 'D':
-                c = KEY_RIGHT;
+                c = KEY_LEFT;
                 break;
             default:
                 c = 0;
@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     string directory_name=get_directory_name_from_path(current);
     FileSystem dir(st,directory_name,current,current,directory_name);
     home_directory=dir;
-    initialize(dp,directory_name,dir);
+    initialize(dp,directory_name,dir,add_to_traversal_list);
 /*
     cout<<current.c_str()<<"\n";
     usleep(1000);
@@ -210,10 +210,10 @@ int main(int argc, char *argv[]) {
           move_cursor_down();
         } 
         else if (c == KEY_RIGHT) {
-            cursorbackward(1);
+            move_right();
         }
         else if (c == KEY_LEFT) {
-            cursorforward(1);
+            move_left();
         } 
         else {
             //putchar(c);

@@ -10,6 +10,8 @@
 
 #define movecursor(x,y) printf("\033[%d;%dH", x,y);
 
+
+
 int list_size;
 
 int rows;
@@ -26,6 +28,8 @@ string root;
 vector<FileSystem> file_system_list;
 FileSystem current_directory;
 
+vector<FileSystem> traversal_list;
+int traversal_point=-1;
 
 void move_cursor_down(){
 	if(display_index + cursor_position-top + 1 == file_system_list.size()){ // if there is nothing to scroll below
@@ -52,9 +56,27 @@ void move_cursor_up(){
 void clear_screen(){
     printf("\033[H");
     printf("\033[J");
+    movecursor(bottom+1,1);
+    char ch='-';
+    string str=string(terminal_size.ws_col, ch);
+    cout<<str;
+    movecursor(1,1);
 }
 
-void initialize(DIR *dp,string name,FileSystem current_dir){
+
+void reduce_list(){
+	for(int i=traversal_list.size()-1;i>traversal_point;i--){
+		traversal_list.pop_back();
+	}
+}
+
+void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){
+	if(add_or_not){
+		reduce_list();
+		traversal_list.push_back(current_dir); // to keep record of traversal sequence
+		traversal_point++;
+	}
+    
     root=name;	
     current_directory=current_dir;
 	terminal_dimensions();
@@ -121,6 +143,11 @@ void scroll_up(){
 
 
 void display_list(vector<FileSystem> file_system_list){
+	clear_screen();
+	cout<<"Current working dir: "<<root<<"\n";
+	 //since first line for application display and last 2 lines for comd mode
+	movecursor(top,1);
+	cursor_position=top;
 	  int size=file_system_list.size();
       bool displayed_something=false;
       for(int i=display_index; i<size && cursor_position<=bottom ;i++){
@@ -152,12 +179,7 @@ void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/
 //code for entering into directory
 
 
-
-
-
-void enter(){
-	int pos=display_index+cursor_position-top;
-	FileSystem file_clicked=file_system_list[pos];
+void select_a_directory(FileSystem file_clicked,int add_or_not){
 	if(file_clicked.type == is_directory){
 		if(file_clicked.directory_path.length() < home_directory.directory_path.length()){
 			return;
@@ -187,7 +209,19 @@ void enter(){
 		    return;
 		}
 		    
-		initialize(dp,real_name,file_clicked);
+		initialize(dp,real_name,file_clicked,add_or_not);
+	}
+}
+
+
+
+void enter(){
+
+	
+	int pos=display_index+cursor_position-top;
+	FileSystem file_clicked=file_system_list[pos];
+	if(file_clicked.type == is_directory){
+		select_a_directory(file_clicked,add_to_traversal_list);
 	}
 	else{ // code for opening file
 		 string inp="​xdg-open "+file_clicked.directory_path;
@@ -198,4 +232,28 @@ void enter(){
 		  strcpy(t1,inp.c_str());
 		  system(t1);
 	}
+}
+
+
+void move_right(){
+	if(traversal_point == traversal_list.size()-1){
+		return;
+	}
+	traversal_point++;
+	select_a_directory(traversal_list[traversal_point],0);
+}
+
+void move_left(){
+	if(traversal_point == 0){
+		return;
+	}
+	traversal_point--;
+	select_a_directory(traversal_list[traversal_point],0);	
+}
+
+void move_to_parent(){
+
+}
+void go_to_home(){
+
 }

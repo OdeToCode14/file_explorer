@@ -9,6 +9,9 @@
 #include <termios.h>
 
 #include <sys/ioctl.h> // for terminal_dimensions
+
+#define add_to_traversal_list 1
+
 /*
 int list_size;
 
@@ -24,7 +27,7 @@ void move_cursor_down();
 void move_cursor_up();
 void clear_screen();
 
-void initialize(DIR *dp,string name,FileSystem current_dir);
+void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not);
 
 void display_list(vector<FileSystem> file_System_list);
 
@@ -37,5 +40,7 @@ void terminal_dimensions(void);
 
 void enter();
 
+void move_right();
 
+void move_left();
 #endif
