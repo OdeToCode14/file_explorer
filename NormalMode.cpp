@@ -151,11 +151,28 @@ void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/
 
 //code for entering into directory
 
+
+
+
+
 void enter(){
 	int pos=display_index+cursor_position-top;
 	FileSystem file_clicked=file_system_list[pos];
 	if(file_clicked.type == is_directory){
 		string path=file_clicked.directory_path;
+		string real_name=file_clicked.file_name;
+
+		if(file_clicked.file_name == "."){
+			return;
+		}
+		else if(file_clicked.file_name == ".."){
+			string real_path=find_directory_for_special_dot(path);
+			path=real_path;
+			real_name=get_directory_name_from_path(real_path);
+			file_clicked.file_name=real_name;
+			file_clicked.directory_path=real_path;
+			file_clicked.parent_path=find_parent_path(real_path);
+		}
         
 		char cwd[path.size() + 1];
 		path.copy(cwd, path.size() + 1);
@@ -167,7 +184,7 @@ void enter(){
 		    return;
 		}
 		    
-		initialize(dp,file_clicked.file_name,file_clicked);
+		initialize(dp,real_name,file_clicked);
 	}
 	else{ // code for opening file
 

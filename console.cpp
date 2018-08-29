@@ -112,15 +112,6 @@ static int kbget(void)
     return (c == KEY_ESCAPE) ? kbesc() : c;
 }
 
-string get_directory_name_from_path(string current){
-  string directory_name;
-  int ind=current.length()-1;
-  while(ind >=0 && current[ind]!='/'){
-    ind--;
-  }
-  directory_name=current.substr(ind + 1);
-  return directory_name;
-}
 
 int main(int argc, char *argv[]) {
     clear_screen();
@@ -152,7 +143,7 @@ int main(int argc, char *argv[]) {
 
     struct stat st;
     string directory_name=get_directory_name_from_path(current);
-    FileSystem dir(st,directory_name,current,current);
+    FileSystem dir(st,directory_name,current,current,directory_name);
     initialize(dp,directory_name,dir);
 /*
     cout<<current.c_str()<<"\n";

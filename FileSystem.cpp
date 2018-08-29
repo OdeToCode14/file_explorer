@@ -21,11 +21,12 @@ FileSystem::FileSystem(){
 
 }
 
-FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_path){
+FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_path,string dis_name){
     	st=ini;
     	file_name=name;
     	directory_path=dir_path;
     	parent_path=par_path;
+    	display_name=dis_name;
     }
 
 void FileSystem::display(){
@@ -52,7 +53,7 @@ void FileSystem::display(){
 	    cout<<" ";
 	    cout<< user->pw_name<<" ";
 	    cout<< group->gr_name<<" ";
-	    cout<< file_name << " --- ";
+	    cout<< display_name << " --- ";
 	    cout<< file_size << " --- ";        
 	    cout<< date << " --- "<<"\n";
 

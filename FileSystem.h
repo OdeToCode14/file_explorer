@@ -35,10 +35,11 @@ public:
   int type;
   string directory_path;
   string parent_path;
+  string display_name;
 
 public:
   FileSystem();
-  FileSystem(struct stat st,string name,string directory_path,string parent_path);
+  FileSystem(struct stat st,string name,string directory_path,string parent_path,string display_name);
   void display();
   
 

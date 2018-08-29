@@ -20,6 +20,11 @@
 
 using namespace std;
 
+string get_directory_name_from_path(string current);
+
+string find_directory_for_special_dot(string str);
+
+string find_parent_path(string str);
 
 vector<FileSystem> create_list(DIR*,FileSystem opened_dir);
 
