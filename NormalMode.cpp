@@ -2,6 +2,7 @@
 #include "NormalMode.h"
 #include "createList.h"
 #include "FileSystem.h"
+#include "CommandMode.h"
 
 #include <dirent.h>
 #include <termios.h>
@@ -15,6 +16,7 @@
 int list_size;
 
 int rows;
+int cols;
               // leave two lines above one for application name other empty
               // leave three lines below one for cmd one above it one below
 int top;
@@ -83,6 +85,7 @@ void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){
 	//list_size=file_system_list.size();
 
 	rows=terminal_size.ws_row;
+	cols=terminal_size.ws_col;
               // leave two lines above one for application name other empty
               // leave three lines below one for cmd one above it one below
 	clear_screen();
@@ -170,8 +173,8 @@ void display_list(){
 void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
     ioctl(0, TIOCGWINSZ, &terminal_size);
 
-    printf ("lines %d\n", terminal_size.ws_row);
-    printf ("columns %d\n", terminal_size.ws_col);
+    //printf ("lines %d\n", terminal_size.ws_row);
+    //printf ("columns %d\n", terminal_size.ws_col);
     
 }
 

@@ -24,6 +24,15 @@ int cursor_position;
 */
 extern int bottom;
 extern int cursor_position;
+extern int list_size;
+
+extern int rows;
+extern int cols;
+              // leave two lines above one for application name other empty
+              // leave three lines below one for cmd one above it one below
+extern int top;
+
+extern int display_index;
 
 void move_cursor_down();
 void move_cursor_up();

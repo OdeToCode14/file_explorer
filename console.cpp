@@ -1,6 +1,7 @@
-#include "createList.h"
 #include "NormalMode.h"
+#include "createList.h"
 #include "FileSystem.h"
+#include "CommandMode.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -175,7 +176,7 @@ void start_normal_mode(){
 }
 
 void start_command_mode(){
-  movecursor(bottom+2,1);
+  initiate_command_mode();
   int c;
 
     while (1) {
@@ -185,6 +186,34 @@ void start_command_mode(){
         }
         if (c == KEY_ESCAPE) {
             start_normal_mode();
+        }
+
+        else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
+          //clear_screen();
+          enter_function_of_command_mode();
+        }
+        else if(c==BACKSPACE){
+          backspace_pressed();
+        }
+        else if (c == KEY_UP) {
+           move_cursor_up_in_command_mode();
+          //move_cursor_up();
+        }
+        else if (c == KEY_DOWN) {
+            move_cursor_down_in_command_mode();
+            //cursordown(1);
+          //move_cursor_down();
+        } 
+        else if (c == KEY_RIGHT) {
+            move_cursor_right_in_command_mode();
+            //move_right();
+        }
+        else if (c == KEY_LEFT) {
+          move_cursor_left_in_command_mode();
+            //move_left();
+        } 
+        else{
+          add_character_to_command(c);
         }
     }
     printf("\n");

@@ -1,5 +1,7 @@
+#include "NormalMode.h"
 #include "createList.h"
 #include "FileSystem.h"
+#include "CommandMode.h"
 
 #include <stdlib.h>
 #include <stdio.h>
