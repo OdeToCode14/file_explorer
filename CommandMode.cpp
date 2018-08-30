@@ -18,6 +18,8 @@ int command_mode_right=cols;
 int cursor_row_in_command_mode=bottom+2;
 int cursor_col_in_command_mode=1;
 
+int max_cursor_col_position_in_command_mode;
+
 string space_string;
 
 string command_string;
@@ -29,9 +31,12 @@ void initiate_command_mode(){
     command_mode_right=cols;
 	cursor_row_in_command_mode=bottom+2;
 	cursor_col_in_command_mode=1;
+	max_cursor_col_position_in_command_mode=1;
 	movecursor(command_mode_top,command_mode_left);
 	char ch=' ';
+	command_string="";
 	space_string=string(cols,ch);
+	refresh_command_string(command_string);
 }
 void move_cursor_up_in_command_mode(){
 	if(cursor_row_in_command_mode == command_mode_top){
@@ -56,7 +61,7 @@ void move_cursor_left_in_command_mode(){
 	movecursor(cursor_row_in_command_mode,cursor_col_in_command_mode);
 }
 void move_cursor_right_in_command_mode(){
-	if(cursor_col_in_command_mode == command_mode_right){
+	if(cursor_col_in_command_mode == command_mode_right || cursor_col_in_command_mode == max_cursor_col_position_in_command_mode){
 		return;
 	}
 	cursor_col_in_command_mode++;
@@ -65,6 +70,9 @@ void move_cursor_right_in_command_mode(){
 
 void add_character_to_command(int c){
 	putchar(c);
+	if(cursor_col_in_command_mode == max_cursor_col_position_in_command_mode){
+		max_cursor_col_position_in_command_mode++;
+	}
 	move_cursor_right_in_command_mode();
 	command_string+=c;
 }
@@ -76,6 +84,7 @@ void backspace_pressed(){
 	string changed=command_string.substr(0, cursor_col_in_command_mode-2) + command_string.substr(cursor_col_in_command_mode-1);
 	command_string=changed;
 	cursor_col_in_command_mode--;
+	max_cursor_col_position_in_command_mode--;
 	refresh_command_string(changed);
 }
 

@@ -18,6 +18,8 @@ extern int command_mode_bottom;
 extern int command_mode_left;
 extern int command_mode_right;
 
+extern int max_cursor_position;
+
 extern string command_string;
 extern string space_string;
 

@@ -227,18 +227,18 @@ void enter(){
 		select_a_directory(file_clicked,add_to_traversal_list);
 	}
 	else{ // code for opening file
-		 string inp="​xdg-open "+file_clicked.directory_path;
+		 /*string inp="​xdg-open "+file_clicked.directory_path;
 		  char t1[1000];
 		  strcpy(t1,inp.c_str());
-		  system(t1);
+		  system(t1);*/
 		  
-              /*
+              
 		       int pid = fork();
 				if (pid == 0) {
-				  execl("/usr/bin/xdg-open", "xdg-open", file_clicked.directory_path, (char *)0);
+				  execl("/usr/bin/xdg-open", "xdg-open", file_clicked.directory_path.c_str(), (char *)NULL);
 				  exit(1);
 				}
-				*/
+				
 	}
 }
 
