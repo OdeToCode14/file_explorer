@@ -26,6 +26,9 @@ using namespace std;
 #define cursorup(x) printf("\033[%dA", (x))
 #define cursordown(x) printf("\033[%dB", (x))
 
+#define BACKSPACE 127
+#define COLON 58
+
 #define KEY_ESCAPE  0x001b
 #define KEY_ENTER   0x000a
 #define KEY_UP      0x0105
@@ -201,6 +204,12 @@ int main(int argc, char *argv[]) {
           //clear_screen();
           enter();
         }
+        else if(c==BACKSPACE){
+          move_to_parent();
+        }
+        else if(c==COLON){
+
+        }
         else if (c == KEY_UP) {
             //cursorup(1);
           move_cursor_up();
@@ -215,8 +224,8 @@ int main(int argc, char *argv[]) {
         else if (c == KEY_LEFT) {
             move_left();
         } 
-        else {
-            //putchar(c);
+        else if(c==104){
+            go_to_home();
         }
     }
     printf("\n");
@@ -235,4 +244,13 @@ int main(int argc, char *argv[]) {
 
 
     return 0;
+}
+
+
+void start_normal_mode(){
+
+}
+
+void start_command_mode(){
+  
 }

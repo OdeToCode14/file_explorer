@@ -225,12 +225,17 @@ void enter(){
 	}
 	else{ // code for opening file
 		 string inp="​xdg-open "+file_clicked.directory_path;
-		  
-		  int x;
-		  
-		  char t1[100];
+		  char t1[1000];
 		  strcpy(t1,inp.c_str());
 		  system(t1);
+		  
+              /*
+		       int pid = fork();
+				if (pid == 0) {
+				  execl("/usr/bin/xdg-open", "xdg-open", file_clicked.directory_path, (char *)0);
+				  exit(1);
+				}
+				*/
 	}
 }
 
@@ -252,8 +257,13 @@ void move_left(){
 }
 
 void move_to_parent(){
-
+	for(FileSystem obj : traversal_list){
+		if(obj.directory_path == current_directory.parent_path){
+			select_a_directory(obj,add_to_traversal_list);
+			break;
+		}
+	}
 }
 void go_to_home(){
-
+	select_a_directory(home_directory,add_to_traversal_list);
 }

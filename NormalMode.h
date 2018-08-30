@@ -43,4 +43,8 @@ void enter();
 void move_right();
 
 void move_left();
+
+void move_to_parent();
+
+void go_to_home();
 #endif
