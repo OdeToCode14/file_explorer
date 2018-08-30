@@ -19,7 +19,7 @@
 
 //#include <time.h>
 
-#define movecursor(x,y) printf("\033[%d;%dH", x,y) // move the cursor to x,y
+//#define movecursor(x,y) printf("\033[%d;%dH", x,y) // move the cursor to x,y
 
 using namespace std;
 

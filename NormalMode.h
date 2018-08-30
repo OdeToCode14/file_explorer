@@ -11,7 +11,7 @@
 #include <sys/ioctl.h> // for terminal_dimensions
 
 #define add_to_traversal_list 1
-
+#define movecursor(x,y) printf("\033[%d;%dH", x,y);
 /*
 int list_size;
 
@@ -22,6 +22,8 @@ int top;
 int bottom; //since first line for application display and last 2 lines for comd mode
 int cursor_position;
 */
+extern int bottom;
+extern int cursor_position;
 
 void move_cursor_down();
 void move_cursor_up();

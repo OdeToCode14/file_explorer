@@ -44,7 +44,8 @@ static int kbesc(void);
 static int kbget(void);
 
 
-
+void start_normal_mode();
+void start_command_mode();
 static int getch(void)
 {
     int c = 0;
@@ -115,6 +116,111 @@ static int kbget(void)
     return (c == KEY_ESCAPE) ? kbesc() : c;
 }
 
+
+
+void start_normal_mode(){
+  int c;
+  movecursor(cursor_position,1);
+    while (1) {
+        c = kbget();
+        if (c == KEY_ESCAPE) {
+            break;
+        }
+        else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
+          //clear_screen();
+          enter();
+        }
+        else if(c==BACKSPACE){
+          move_to_parent();
+        }
+        else if(c==COLON){
+          start_command_mode();
+        }
+        else if (c == KEY_UP) {
+            //cursorup(1);
+          move_cursor_up();
+        }
+        else if (c == KEY_DOWN) {
+            //cursordown(1);
+          move_cursor_down();
+        } 
+        else if (c == KEY_RIGHT) {
+            move_right();
+        }
+        else if (c == KEY_LEFT) {
+            move_left();
+        } 
+        else if(c==104){
+            go_to_home();
+        }
+    }
+    printf("\n");
+
+
+
+    cout<<"Press q to exit";
+    char ch;
+      do{
+       
+       cin>>ch;
+       if(ch=='q'){
+          printf("\e[?1049l");
+       }
+    }while(ch!='q');
+    exit(0); // this to avoi looping between normal mode and command mode
+}
+
+void start_command_mode(){
+  movecursor(bottom+2,1);
+  int c;
+
+    while (1) {
+        c = kbget();
+        if (c == KEY_ESCAPE) {
+            start_normal_mode();
+        }
+        else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
+          //clear_screen();
+          enter();
+        }
+        else if(c==BACKSPACE){
+          move_to_parent();
+        }
+        else if(c==COLON){
+
+        }
+        else if (c == KEY_UP) {
+            //cursorup(1);
+          move_cursor_up();
+        }
+        else if (c == KEY_DOWN) {
+            //cursordown(1);
+          move_cursor_down();
+        } 
+        else if (c == KEY_RIGHT) {
+            move_right();
+        }
+        else if (c == KEY_LEFT) {
+            move_left();
+        } 
+        else if(c==104){
+            go_to_home();
+        }
+    }
+    printf("\n");
+
+
+
+    cout<<"Press q to exit";
+    char ch;
+      do{
+       
+       cin>>ch;
+       if(ch=='q'){
+          printf("\e[?1049l");
+       }
+    }while(ch!='q');
+}
 
 int main(int argc, char *argv[]) {
     clear_screen();
@@ -192,65 +298,7 @@ int main(int argc, char *argv[]) {
     }
     */
 
-
-    int c;
-
-    while (1) {
-        c = kbget();
-        if (c == KEY_ESCAPE) {
-            break;
-        }
-        else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
-          //clear_screen();
-          enter();
-        }
-        else if(c==BACKSPACE){
-          move_to_parent();
-        }
-        else if(c==COLON){
-
-        }
-        else if (c == KEY_UP) {
-            //cursorup(1);
-          move_cursor_up();
-        }
-        else if (c == KEY_DOWN) {
-            //cursordown(1);
-          move_cursor_down();
-        } 
-        else if (c == KEY_RIGHT) {
-            move_right();
-        }
-        else if (c == KEY_LEFT) {
-            move_left();
-        } 
-        else if(c==104){
-            go_to_home();
-        }
-    }
-    printf("\n");
-
-
-
-    cout<<"Press q to exit";
-    char ch;
-      do{
-       
-       cin>>ch;
-       if(ch=='q'){
-          printf("\e[?1049l");
-       }
-    }while(ch!='q');
-
+    start_normal_mode();
 
     return 0;
-}
-
-
-void start_normal_mode(){
-
-}
-
-void start_command_mode(){
-  
 }

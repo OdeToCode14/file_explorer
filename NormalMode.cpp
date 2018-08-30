@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <sys/ioctl.h> // for terminal_dimensions
 
-#define movecursor(x,y) printf("\033[%d;%dH", x,y);
+
 
 
 
@@ -90,7 +90,7 @@ void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){
 
     cout<<"Current working dir: "<<root<<"\n";
 	top=3;
-	bottom=rows-3; //since first line for application display and last 2 lines for comd mode
+	bottom=rows-4; //since first line for application display and last 2 lines for comd mode
 	movecursor(top,1);
 	cursor_position=top;
 	
