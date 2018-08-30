@@ -36,55 +36,61 @@ using namespace std;
 #define KEY_LEFT    0x0107
 #define KEY_RIGHT   0x0108
 
-static struct termios term, oterm;
+struct termios new_terminal_state, previous_terminal_state;
 
-static int getch(void);
-static int kbhit(void);
-static int kbesc(void);
-static int kbget(void);
+int get_sigle_character(void);
+int check_for_second_character_of_escape_sequence(void);
+int get_the_escape_key_pressed(void);
+
 
 
 void start_normal_mode();
 void start_command_mode();
-static int getch(void)
+
+int get_sigle_character(void)
 {
     int c = 0;
 
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 1;
-    term.c_cc[VTIME] = 0;
-    tcsetattr(0, TCSANOW, &term);
+    tcgetattr(0, &previous_terminal_state);
+    memcpy(&new_terminal_state, &previous_terminal_state, sizeof(new_terminal_state));
+    new_terminal_state.c_cc[VMIN] = 1;
+
+    new_terminal_state.c_lflag &= ~(ICANON | ECHO);
+    
+    new_terminal_state.c_cc[VTIME] = 0;
+    
+    tcsetattr(0, TCSANOW, &new_terminal_state);
     c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
+    
+    tcsetattr(0, TCSANOW, &previous_terminal_state);
+    
     return c;
 }
 
-static int kbhit(void)
+int check_for_second_character_of_escape_sequence(void)
 {
     int c = 0;
 
-    tcgetattr(0, &oterm);
-    memcpy(&term, &oterm, sizeof(term));
-    term.c_lflag &= ~(ICANON | ECHO);
-    term.c_cc[VMIN] = 0;
-    term.c_cc[VTIME] = 1;
-    tcsetattr(0, TCSANOW, &term);
+    tcgetattr(0, &previous_terminal_state);
+    memcpy(&new_terminal_state, &previous_terminal_state, sizeof(new_terminal_state));
+    new_terminal_state.c_lflag &= ~(ICANON | ECHO);
+    new_terminal_state.c_cc[VMIN] = 0;
+    new_terminal_state.c_cc[VTIME] = 1;
+    tcsetattr(0, TCSANOW, &new_terminal_state);
     c = getchar();
-    tcsetattr(0, TCSANOW, &oterm);
+    tcsetattr(0, TCSANOW, &previous_terminal_state);
     if (c != -1) ungetc(c, stdin);
     return ((c != -1) ? 1 : 0);
 }
 
-static int kbesc(void)
+int get_the_escape_key_pressed(void)
 {
-    int c;
+    int c=0;
 
-    if (!kbhit()) return KEY_ESCAPE;
-    c = getch();
+    if (!check_for_second_character_of_escape_sequence()) return KEY_ESCAPE;
+    c = get_sigle_character();
     if (c == '[') {
-        switch (getch()) {
+        switch (get_sigle_character()) {
             case 'A':
                 c = KEY_UP;
                 break;
@@ -101,20 +107,15 @@ static int kbesc(void)
                 c = 0;
                 break;
         }
-    } else {
-        c = 0;
+    } 
+    if (c == 0){ 
+      while (check_for_second_character_of_escape_sequence()) {
+        get_sigle_character();
+      }
     }
-    if (c == 0) while (kbhit()) getch();
     return c;
 }
 
-static int kbget(void)
-{
-    int c;
-
-    c = getch();
-    return (c == KEY_ESCAPE) ? kbesc() : c;
-}
 
 
 
@@ -122,7 +123,10 @@ void start_normal_mode(){
   int c;
   movecursor(cursor_position,1);
     while (1) {
-        c = kbget();
+        c = get_sigle_character();
+        if(c == KEY_ESCAPE){
+          c=get_the_escape_key_pressed();
+        }
         if (c == KEY_ESCAPE) {
             break;
         }
@@ -167,7 +171,7 @@ void start_normal_mode(){
           printf("\e[?1049l");
        }
     }while(ch!='q');
-    exit(0); // this to avoi looping between normal mode and command mode
+    exit(0); // this to avoid looping between normal mode and command mode
 }
 
 void start_command_mode(){
@@ -175,36 +179,12 @@ void start_command_mode(){
   int c;
 
     while (1) {
-        c = kbget();
+        c = get_sigle_character();
+        if(c == KEY_ESCAPE){
+          c=get_the_escape_key_pressed();
+        }
         if (c == KEY_ESCAPE) {
             start_normal_mode();
-        }
-        else if(c==KEY_ENTER){  // for clearing the screen https://stackoverflow.com/questions/37774983/clearing-the-screen-by-printing-a-character
-          //clear_screen();
-          enter();
-        }
-        else if(c==BACKSPACE){
-          move_to_parent();
-        }
-        else if(c==COLON){
-
-        }
-        else if (c == KEY_UP) {
-            //cursorup(1);
-          move_cursor_up();
-        }
-        else if (c == KEY_DOWN) {
-            //cursordown(1);
-          move_cursor_down();
-        } 
-        else if (c == KEY_RIGHT) {
-            move_right();
-        }
-        else if (c == KEY_LEFT) {
-            move_left();
-        } 
-        else if(c==104){
-            go_to_home();
         }
     }
     printf("\n");
