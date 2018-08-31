@@ -8,6 +8,9 @@
 
 #include <sys/ioctl.h> 
 
+#include <iostream>
+#include <fstream>
+
 
 int command_mode_top=bottom+2;
 int command_mode_bottom=rows;
@@ -102,7 +105,7 @@ int enter_function_of_command_mode(){
 	actual_command.clear();
 	int ind=0;
 	while(ind<command_string.length()){
-		ind=getCommandToken(ind);
+		ind=get_command_token(ind);
 		if(ind == -1){
 			break;
 		}
@@ -127,6 +130,9 @@ void make_absolute_paths(){
 		if(actual_command[i]=="."){
 			actual_command[i]=current_directory.directory_path;
 		}
+		else if(actual_command[i]==".."){
+			actual_command[i]=current_directory.parent_path;
+		}
 		
 		else if(actual_command[i] == "/" || actual_command[i] == "~"){
 			actual_command[i]=home_directory.directory_path;
@@ -150,12 +156,13 @@ void make_absolute_paths(){
 	}
 }
 
-void createDirectory(){
+void create_directory(){
 	string path=actual_command[2];
 
 	
 	
-	chdir(path.c_str());
+	
+	path=path+"/"+get_directory_name_from_path(actual_command[1]);
 	/*char arr[4096];
 	getcwd(arr,4096);
 
@@ -166,14 +173,54 @@ void createDirectory(){
 	int x;
 	cin>>x;
 */
-	int status=mkdir(get_directory_name_from_path(actual_command[1]).c_str(),0777);
+	int status=mkdir(path.c_str(),0777);
 	if(!status){
-		cout<<"created";
+		cout<<"Directory created";
 	}
 	else{
-		cout<<"not created";
+		cout<<"Directory not created";
 	}
 }
+
+void create_file(){
+	string path=actual_command[2];
+	path=path+"/"+get_directory_name_from_path(actual_command[1]);
+	
+	fstream file;
+	file.open(path.c_str(), ios_base::out | ios_base::in);  // will not create file
+	if (file.is_open()){
+	    cout << "Warning, file already exists, proceed?";
+	    file.close();
+	}
+	else{
+	    file.clear();
+	    file.open(path.c_str(), ios_base::out);  // will create if necessary
+	    cout<<"file created";
+	}
+}
+
+void move_to_directory(){
+	string path=actual_command[1];
+
+	char cwd[path.size() + 1];
+	path.copy(cwd, path.size() + 1);
+	cwd[path.size()] = '\0';
+	DIR* dp;
+	if ((dp = opendir(cwd)) == NULL){
+	    //printf("can’t open %s\n", cwd);
+		cout<<"can’t open "<<path<<"\n";
+		return;
+	}
+
+	struct stat st;
+    string directory_name=get_directory_name_from_path(path);
+    string parent=find_parent_path(path);
+    FileSystem dir(st,directory_name,path,parent,directory_name);	    
+	initialize(dp,directory_name,dir,add_to_traversal_list);
+
+	refresh_command_string("");
+}
+
 void decide_command(){
 	string cmd=actual_command[0];
 	make_absolute_paths();
@@ -187,14 +234,17 @@ void decide_command(){
 
 	}
 	else if(cmd == "create_dir"){
-		createDirectory();
+		create_directory();
 	}
 	else if(cmd == "create_file"){
-		
+		create_file();
+	}
+	else if(cmd == "goto"){
+		move_to_directory();
 	}
 }
 
-int getCommandToken(int ind){
+int get_command_token(int ind){
 	string res="";
 
 	if(command_string[ind] == '\''){

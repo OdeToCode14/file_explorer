@@ -39,13 +39,16 @@ void move_cursor_right_in_command_mode();
 void backspace_pressed();
 
 void refresh_command_string(string changed);
-int getCommandToken(int ind);
+int get_command_token(int ind);
 
 void decide_command();
 
 void make_absolute_paths();
 
-void createDirectory();
+void create_directory();
+void create_file();
+
+void move_to_directory();
 
 
 #endif
