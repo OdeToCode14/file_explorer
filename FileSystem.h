@@ -19,6 +19,7 @@ using namespace std;
 
 static const int is_directory =0;
 static const int is_file= 1;
+static const int does_not_exist=-1;
 
 
 

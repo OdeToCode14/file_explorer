@@ -120,6 +120,7 @@ int enter_function_of_command_mode(){
 	movecursor(command_mode_top,command_mode_left);
 	cout<<space_string;
 	movecursor(command_mode_top,command_mode_left);
+	command_string="";
 
 	decide_command();
 }
@@ -217,15 +218,59 @@ void move_to_directory(){
     string parent=find_parent_path(path);
     FileSystem dir(st,directory_name,path,parent,directory_name);	    
 	initialize(dp,directory_name,dir,add_to_traversal_list);
+	initiate_command_mode();
+}
 
-	refresh_command_string("");
+void copy_file(string file_path, string destination){
+	FILE *src, *dest;
+    src = fopen(file_path.c_str(), "r");
+    fstream file;
+	string path=destination+"/"+get_directory_name_from_path(file_path);
+	file.open(path.c_str(), ios_base::out | ios_base::in);  // will not create file
+	if (file.is_open()){
+		cout <<get_directory_name_from_path(file_path) <<" file already exists";
+		file.close();
+		return;
+	}
+	else{
+		file.clear();
+	    file.open(path.c_str(), ios_base::out);  // will create if necessary
+	}
+
+    dest = fopen(path.c_str(), "w");
+	char ch;
+	while((ch = fgetc(src)) != EOF )
+		fputc(ch, dest);
+	fclose(src);
+	fclose(dest);
+}
+
+void copy_file_directory(){
+	string destination=actual_command[actual_command.size()-1];
+	if(check_file_or_directory(destination) == does_not_exist){
+		cout<<"destination does not exist";
+		return;
+	}
+	for(int i=1;i<=actual_command.size()-2;i++){
+	   int status=check_file_or_directory(actual_command[i]);
+	   if(status == does_not_exist){
+	   	cout<<actual_command[i]<<"does_not_exist";
+	   }
+	   else if(status == is_file){
+		   copy_file(actual_command[i],destination);
+	   }
+
+	   else if(status == is_directory){
+
+	   }	
+	}
 }
 
 void decide_command(){
 	string cmd=actual_command[0];
 	make_absolute_paths();
 	if(cmd == "copy"){
-
+		copy_file_directory();
 	}
 	else if(cmd == "move"){
 

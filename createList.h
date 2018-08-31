@@ -17,11 +17,15 @@
 
 #include <pwd.h>
 #include <grp.h>
+
+
 //#include <time.h>
 
 using namespace std;
 
 extern FileSystem home_directory; // represents path to home of application
+
+int check_file_or_directory(string path);
 
 string get_directory_name_from_path(string current);
 

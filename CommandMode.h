@@ -50,5 +50,7 @@ void create_file();
 
 void move_to_directory();
 
+void copy_file_directory();
+
 
 #endif

@@ -29,7 +29,18 @@ FileSystem home_directory;
 
 //struct winsize terminal_size;  // for terminal dimensions
 
-
+int check_file_or_directory(string path){
+  struct stat st;
+  if(stat(path.c_str(), &st) != 0) {
+    return does_not_exist;
+  }
+  if(S_ISDIR(st.st_mode)){
+    return is_directory;
+  }
+  else{
+    return is_file;
+  }
+}
 
 
 string get_directory_name_from_path(string current){
