@@ -18,7 +18,7 @@ extern int command_mode_bottom;
 extern int command_mode_left;
 extern int command_mode_right;
 
-extern int max_cursor_position;
+extern int max_cursor_col_position_in_command_mode;
 
 extern string command_string;
 extern string space_string;
@@ -29,7 +29,7 @@ extern int cursor_col_in_command_mode;
 void initiate_command_mode();
 void add_character_to_command(int c);
 
-void enter_function_of_command_mode();
+int enter_function_of_command_mode();
 void move_cursor_up_in_command_mode();
 void move_cursor_down_in_command_mode();
 
@@ -39,7 +39,13 @@ void move_cursor_right_in_command_mode();
 void backspace_pressed();
 
 void refresh_command_string(string changed);
+int getCommandToken(int ind);
 
+void decide_command();
+
+void make_absolute_paths();
+
+void createDirectory();
 
 
 #endif

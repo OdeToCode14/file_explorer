@@ -34,6 +34,8 @@ extern int top;
 
 extern int display_index;
 
+extern FileSystem current_directory;
+
 void move_cursor_down();
 void move_cursor_up();
 void clear_screen();

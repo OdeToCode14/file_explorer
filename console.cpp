@@ -249,7 +249,6 @@ int main(int argc, char *argv[]) {
        perror("getcwd() error");
        return 1;
    }
-
   
    
     // alternate way use opendir(".")
