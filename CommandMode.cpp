@@ -279,16 +279,15 @@ int copy_directory(string directory_path,string destination){
 	return 1;
 }
 
-void copy_file_directory(){
+int copy_file_directory(){
 	string destination=actual_command[actual_command.size()-1];
 	if(check_file_or_directory(destination) == does_not_exist){
-		cout<<"destination does not exist";
-		return;
+		return 0;
 	}
 	for(int i=1;i<=actual_command.size()-2;i++){
 	   int status=check_file_or_directory(actual_command[i]);
 	   if(status == does_not_exist){
-	   	cout<<actual_command[i]<<"does_not_exist";
+	   	return 0;
 	   }
 	   else if(status == is_file){
 		   copy_file(actual_command[i],destination);
@@ -298,6 +297,7 @@ void copy_file_directory(){
 	   	copy_directory(actual_command[i],destination);
 	   }	
 	}
+	return 1;
 }
 
 int rename_file(string old_name_path,string new_name_path){
@@ -310,6 +310,30 @@ int rename_file(string old_name_path,string new_name_path){
     }
 }
 
+int move_file_directory(){
+	string destination=actual_command[actual_command.size()-1];
+	for(int i=1;i<=actual_command.size()-2;i++){
+		int status=check_file_or_directory(actual_command[i]);
+		if(status == does_not_exist){
+			return 0;
+		}
+		else{
+			rename_file(actual_command[i],destination+"/"+get_directory_name_from_path(actual_command[i]));
+		}
+	}
+	return 1;
+}
+
+int delete_file(string file_path){
+	if (remove(file_path.c_str()) == 0)
+		return 1;
+   	else
+   		return 0;
+
+}
+int delete_directory(string directory_path){
+
+}
 void decide_command(){
 	string cmd=actual_command[0];
 	make_absolute_paths();
@@ -317,7 +341,7 @@ void decide_command(){
 		copy_file_directory();
 	}
 	else if(cmd == "move"){
-
+		move_file_directory();
 	}
 	else if(cmd == "rename"){
 		rename_file(actual_command[1],actual_command[2]);
@@ -328,9 +352,16 @@ void decide_command(){
 	else if(cmd == "create_file"){
 		create_file(actual_command[1],actual_command[2]);
 	}
+	else if(cmd == "delete_file"){
+		delete_file(actual_command[1]);
+	}
+	else if(cmd == "delete_dir"){
+		delete_directory(actual_command[1]);
+	}
 	else if(cmd == "goto"){
 		move_to_directory();
 	}
+
 }
 
 int get_command_token(int ind){

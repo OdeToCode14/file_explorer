@@ -50,12 +50,17 @@ int create_file(string file_path,string destination);
 
 void move_to_directory();
 
-void copy_file_directory();
+int copy_file_directory();
 
 int copy_file(string file_path, string destination);
 int copy_directory(string directory_path,string destination);
+int move_file_directory();
 
 int rename_file(string old_name_path,string new_name_path);
+
+int delete_file(string file_path);
+
+int delete_directory(string directory_path);
 
 
 #endif
