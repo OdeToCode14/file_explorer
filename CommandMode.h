@@ -45,12 +45,17 @@ void decide_command();
 
 void make_absolute_paths();
 
-void create_directory();
-void create_file();
+int create_directory(string source,string destination);
+int create_file(string file_path,string destination);
 
 void move_to_directory();
 
 void copy_file_directory();
+
+int copy_file(string file_path, string destination);
+int copy_directory(string directory_path,string destination);
+
+int rename_file(string old_name_path,string new_name_path);
 
 
 #endif

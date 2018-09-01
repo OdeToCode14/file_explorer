@@ -157,13 +157,8 @@ void make_absolute_paths(){
 	}
 }
 
-void create_directory(){
-	string path=actual_command[2];
-
-	
-	
-	
-	path=path+"/"+get_directory_name_from_path(actual_command[1]);
+int create_directory(string source,string destination){
+	string path=destination+"/"+get_directory_name_from_path(source);
 	/*char arr[4096];
 	getcwd(arr,4096);
 
@@ -175,28 +170,28 @@ void create_directory(){
 	cin>>x;
 */
 	int status=mkdir(path.c_str(),0777);
-	if(!status){
-		cout<<"Directory created";
+	if(!status){  //created sucessfully
+		return 1;
 	}
-	else{
-		cout<<"Directory not created";
+	else{    //not created sucessfull
+		return 0;
 	}
 }
 
-void create_file(){
-	string path=actual_command[2];
-	path=path+"/"+get_directory_name_from_path(actual_command[1]);
+int create_file(string file_path,string destination){
+	string path=destination;
+	path=path+"/"+get_directory_name_from_path(file_path);
 	
 	fstream file;
 	file.open(path.c_str(), ios_base::out | ios_base::in);  // will not create file
 	if (file.is_open()){
-	    cout << "Warning, file already exists, proceed?";
 	    file.close();
+	    return 0;
 	}
 	else{
 	    file.clear();
-	    file.open(path.c_str(), ios_base::out);  // will create if necessary
-	    cout<<"file created";
+	    file.open(path.c_str(), ios_base::out);
+	    return 1;
 	}
 }
 
@@ -221,16 +216,15 @@ void move_to_directory(){
 	initiate_command_mode();
 }
 
-void copy_file(string file_path, string destination){
+int copy_file(string file_path, string destination){
 	FILE *src, *dest;
     src = fopen(file_path.c_str(), "r");
     fstream file;
 	string path=destination+"/"+get_directory_name_from_path(file_path);
 	file.open(path.c_str(), ios_base::out | ios_base::in);  // will not create file
 	if (file.is_open()){
-		cout <<get_directory_name_from_path(file_path) <<" file already exists";
 		file.close();
-		return;
+		return -1;
 	}
 	else{
 		file.clear();
@@ -243,6 +237,46 @@ void copy_file(string file_path, string destination){
 		fputc(ch, dest);
 	fclose(src);
 	fclose(dest);
+	return 1;
+}
+
+
+int copy_directory(string directory_path,string destination){
+	create_directory(directory_path,destination);
+	destination = destination+"/"+get_directory_name_from_path(directory_path);
+	char cwd[directory_path.size() + 1];
+	directory_path.copy(cwd, directory_path.size() + 1);
+	cwd[directory_path.size()] = '\0';
+	DIR* dp;
+	if ((dp = opendir(cwd)) == NULL){
+		return 0;
+	}
+
+	struct dirent *dirp;
+      
+      
+      while ((dirp = readdir(dp)) != NULL){
+            string file_name=dirp->d_name;
+            string path_name=directory_path+"/"+file_name;
+            struct stat st;
+            //file_name.c_str()
+
+            if(stat(path_name.c_str(), &st) != 0) {
+            	return -1;
+            }
+            
+            if(S_ISDIR(st.st_mode)){
+
+                 if(file_name == "." || file_name == ".."){
+                 	continue;
+                 }
+                 copy_directory(path_name,destination);
+            }
+            else{
+            	create_file(path_name,destination);
+            }
+    }
+	return 1;
 }
 
 void copy_file_directory(){
@@ -261,9 +295,19 @@ void copy_file_directory(){
 	   }
 
 	   else if(status == is_directory){
-
+	   	copy_directory(actual_command[i],destination);
 	   }	
 	}
+}
+
+int rename_file(string old_name_path,string new_name_path){
+	int value = rename(old_name_path.c_str(), new_name_path.c_str());
+    if(!value){
+    	return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 void decide_command(){
@@ -276,13 +320,13 @@ void decide_command(){
 
 	}
 	else if(cmd == "rename"){
-
+		rename_file(actual_command[1],actual_command[2]);
 	}
 	else if(cmd == "create_dir"){
-		create_directory();
+		create_directory(actual_command[1],actual_command[2]);
 	}
 	else if(cmd == "create_file"){
-		create_file();
+		create_file(actual_command[1],actual_command[2]);
 	}
 	else if(cmd == "goto"){
 		move_to_directory();
