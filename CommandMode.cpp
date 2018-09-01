@@ -332,7 +332,33 @@ int delete_file(string file_path){
 
 }
 int delete_directory(string directory_path){
+	char cwd[directory_path.size() + 1];
+	directory_path.copy(cwd, directory_path.size() + 1);
+	cwd[directory_path.size()] = '\0';
+	DIR* dp;
+	if ((dp = opendir(cwd)) == NULL){
+		return 0;
+	}
 
+	struct dirent *dirp;
+    while ((dirp = readdir(dp)) != NULL){
+            string file_name=dirp->d_name;
+            string path_name=directory_path+"/"+file_name;
+            struct stat st;
+            if(stat(path_name.c_str(), &st) != 0) {
+            	return -1;
+            }
+            if(S_ISDIR(st.st_mode)){
+                 if(file_name == "." || file_name == ".."){
+                 	continue;
+                 }
+                 delete_directory(path_name);
+            }
+            else{
+            	delete_file(path_name);
+            }
+    }
+    rmdir(directory_path.c_str());
 }
 void decide_command(){
 	string cmd=actual_command[0];
