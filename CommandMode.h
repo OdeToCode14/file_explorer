@@ -62,5 +62,10 @@ int delete_file(string file_path);
 
 int delete_directory(string directory_path);
 
+int search_file(string path);
+
+int search_recur(string directory_path,string search_name,vector<FileSystem> &search_list);
+void display_search_list(vector<FileSystem> &search_list);
+
 
 #endif

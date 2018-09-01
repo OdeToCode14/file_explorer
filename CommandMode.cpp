@@ -360,6 +360,63 @@ int delete_directory(string directory_path){
     }
     rmdir(directory_path.c_str());
 }
+
+void display_search_list(vector<FileSystem> &search_list){
+	clear_screen();
+	cout<<"Following are the search results . Press left arrow key to go to previous folder\n";
+	cout<<"\n";
+	for(int i=0;i<search_list.size();i++){
+		cout<<i+1<<". "<<search_list[i].directory_path<<"\n";
+	}
+	cout<<"\npress left arrow key to go to previous folder";
+	return;
+}
+
+int search_file(string path){
+	string parent_path=find_parent_path(path);
+	string file_name=get_directory_name_from_path(path);
+	vector<FileSystem> search_list;
+	search_recur(parent_path,file_name,search_list);
+	if(search_list.size() == 0){
+		return 0;
+	}
+	display_search_list(search_list);
+	return 1;
+}
+
+int search_recur(string directory_path,string search_name,vector<FileSystem> &search_list){
+	char cwd[directory_path.size() + 1];
+	directory_path.copy(cwd, directory_path.size() + 1);
+	cwd[directory_path.size()] = '\0';
+	DIR* dp;
+	if ((dp = opendir(cwd)) == NULL){
+		return 0;
+	}
+
+	struct dirent *dirp;
+    while ((dirp = readdir(dp)) != NULL){
+            string file_name=dirp->d_name;
+            string path_name=directory_path+"/"+file_name;
+            struct stat st;
+            if(stat(path_name.c_str(), &st) != 0) {
+            	return -1;
+            }
+            if(S_ISDIR(st.st_mode)){
+                 if(file_name == "." || file_name == ".."){
+                 	continue;
+                 }
+                 search_recur(path_name,search_name,search_list);
+            }
+            else{
+            	if(strstr(file_name.c_str(),search_name.c_str())){
+            		FileSystem obj(st,file_name,path_name,directory_path,file_name);
+                  	obj.type=is_file;
+                  	search_list.push_back(obj);
+				}
+            }
+    }
+}
+
 void decide_command(){
 	string cmd=actual_command[0];
 	make_absolute_paths();
@@ -386,6 +443,9 @@ void decide_command(){
 	}
 	else if(cmd == "goto"){
 		move_to_directory();
+	}
+	else if(cmd == "search"){
+		search_file(actual_command[1]);
 	}
 
 }
