@@ -39,5 +39,7 @@ void display_list();
 
 void terminal_dimensions(void);
 
+char* create_array(string str,int size);
+
 
 #endif

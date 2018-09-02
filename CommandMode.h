@@ -67,5 +67,8 @@ int search_file(string path);
 int search_recur(string directory_path,string search_name,vector<FileSystem> &search_list);
 void display_search_list(vector<FileSystem> &search_list);
 
+int generate_snapshot(string folder_path,string directory_path,string file_path);
+int generate_recur(string folder_path,string directory_path,FILE *file);
+
 
 #endif

@@ -53,10 +53,22 @@ void FileSystem::display(){
 	    printf( (st.st_mode & S_IWOTH) ? "w" : "-");
 	    printf( (st.st_mode & S_IXOTH) ? "x" : "-");
 	    cout<<" ";
+	    
 	    cout<< user->pw_name<<" ";
 	    cout<< group->gr_name<<" ";
-	    cout<< display_name << " --- ";
-	    cout<< file_size << " --- ";        
-	    cout<< date << " --- "<<"\n";
+
+	    std::stringstream ss;
+		ss << file_size;
+		std::string str = ss.str();
+	    char *ch=create_array(string(str),10);
+	    //cout<< file_size << " --- ";
+	    cout<<ch;
+	    cout<< date <<"  ";
+
+	    ch=create_array(display_name,30);
+	    cout<<ch<<"\n";
+	    //cout<< display_name << " --- ";
 
     }
+
+    

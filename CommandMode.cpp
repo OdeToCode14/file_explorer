@@ -417,6 +417,67 @@ int search_recur(string directory_path,string search_name,vector<FileSystem> &se
     }
 }
 
+int generate_snapshot(string folder_path,string directory_path,string file_path){
+	fstream fp;
+	fp.open(file_path.c_str(), ios_base::out | ios_base::in);  // create file if does not exist
+	if (fp.is_open()){
+	    fp.close();
+	}
+	else{
+	    fp.clear();
+	    fp.open(file_path.c_str(), ios_base::out);
+	}
+	FILE * file;
+	file = fopen(file_path.c_str(), "w");
+	generate_recur(folder_path,directory_path,file);
+	fclose(file);
+	return 1;	
+}
+
+int generate_recur(string folder_path,string directory_path,FILE *file){
+	string display_path="." + directory_path.substr(folder_path.length()) + ":";
+	bool flag=false;
+	fprintf(file,"%s\n", display_path.c_str());
+
+	char cwd[directory_path.size() + 1];
+	directory_path.copy(cwd, directory_path.size() + 1);
+	cwd[directory_path.size()] = '\0';
+	DIR* dp;
+	if ((dp = opendir(cwd)) == NULL){
+		return 0;
+	}
+
+	vector<string> child_paths;
+	struct dirent *dirp;
+    while ((dirp = readdir(dp)) != NULL){
+            string file_name=dirp->d_name;
+            string path_name=directory_path+"/"+file_name;
+            struct stat st;
+            if(stat(path_name.c_str(), &st) != 0) {
+            	return -1;
+            }
+            if(S_ISDIR(st.st_mode)){
+                 if(file_name == "." || file_name == ".."){
+                 	continue;
+                 }
+                 fprintf(file,"%s\t", file_name.c_str());
+                 child_paths.push_back(path_name);
+                 flag=true;
+            }
+            else{
+            	fprintf(file,"%s\t", file_name.c_str());
+            	flag=true;
+            }
+    }
+    fprintf(file,"\n");
+    if(flag == true)
+    	fprintf(file,"\n");
+    for(int i=0;i<child_paths.size();i++){
+    	generate_recur(folder_path,child_paths[i],file);
+    }
+    return 1;
+}
+
 void decide_command(){
 	string cmd=actual_command[0];
 	make_absolute_paths();
@@ -447,7 +508,9 @@ void decide_command(){
 	else if(cmd == "search"){
 		search_file(actual_command[1]);
 	}
-
+	else if(cmd == "snapshot"){
+		generate_snapshot(actual_command[1],actual_command[1],actual_command[2]);
+	}
 }
 
 int get_command_token(int ind){

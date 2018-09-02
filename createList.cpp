@@ -141,3 +141,16 @@ vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){
     
 }
 */
+
+char* create_array(string str,int size){
+      char *ch;
+      ch=(char*) malloc(sizeof(char)*size);
+      for(int i=0;i<size-1;i++){
+        ch[i]=' ';
+      }
+      for(int i=0;i<str.length() && i<size-2;i++){
+        ch[i]=str[i];
+      }
+      ch[size-1]='\0';
+      return ch;
+    }
