@@ -2,6 +2,7 @@
 #include "createList.h"
 #include "FileSystem.h"
 #include "CommandMode.h"
+#include "console.h"
 
 #include <dirent.h>
 #include <termios.h>
@@ -515,8 +516,23 @@ void decide_command(){
 	else if(cmd == "snapshot"){
 		generate_snapshot(actual_command[1],actual_command[1],actual_command[2]);
 	}
+	else{
+		print_error("command not found");
+	}
 }
 
+
+void print_error(string error){
+	initiate_command_mode();
+	cout<<error<<" ";
+	cout<<"Press any character key to continue";
+
+	while(true){
+		int c=get_sigle_character();
+		break;
+	}
+	initiate_command_mode();
+}
 int get_command_token(int ind){
 	string res="";
 

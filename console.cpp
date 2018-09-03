@@ -2,6 +2,7 @@
 #include "createList.h"
 #include "FileSystem.h"
 #include "CommandMode.h"
+#include "console.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,15 +21,7 @@
 
 using namespace std;
 
-#define BACKSPACE 127
-#define COLON 58
 
-#define UP      0x0105
-#define DOWN    0x0106
-#define LEFT    0x0107
-#define RIGHT   0x0108
-#define ESCAPE  0x001b
-#define ENTER   0x000a
 
 
 struct termios new_terminal_state, previous_terminal_state;
@@ -172,7 +165,7 @@ void start_command_mode(){
         if(c == ESCAPE){
           c=get_the_escape_key_pressed();
         }
-        
+
         if (c == ESCAPE) {
             start_normal_mode();
         }
