@@ -32,4 +32,8 @@
 
 int get_sigle_character(void);
 
+int get_the_escape_key_pressed(void);
+
+void start_normal_mode();
+
 #endif

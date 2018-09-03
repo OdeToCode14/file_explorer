@@ -37,7 +37,7 @@ void start_command_mode();
 void set_new_terminal_state();
 void set_previous_terminal_state();
 
-int get_sigle_character(void)
+int get_sigle_character(void) // for getting single character input
 {
     int c = 0;
 
@@ -51,14 +51,13 @@ int get_sigle_character(void)
     return c;
 }
 
-void set_new_terminal_state(){
+void set_new_terminal_state(){  // setting terminal state to the new terminal state
   tcsetattr(0, TCSANOW, &new_terminal_state);
 }
-void set_previous_terminal_state(){
+void set_previous_terminal_state(){  // setting terminal state to original
   tcsetattr(0, TCSANOW, &previous_terminal_state);
 }
-int check_for_second_character_of_escape_sequence(void)
-{
+int check_for_second_character_of_escape_sequence(void){  // if the first character is escape get the second to find which escape sequence pressed
     int c = 0;
 
     disableEcho();
@@ -74,13 +73,13 @@ int check_for_second_character_of_escape_sequence(void)
     return 0;
 }
 
-void disableEcho(){
+void disableEcho(){  // for disabling echo and putting in non canonical mode
     tcgetattr(0, &previous_terminal_state);
     memcpy(&new_terminal_state, &previous_terminal_state, sizeof(new_terminal_state));
     new_terminal_state.c_lflag &= ~(ICANON | ECHO);
 }
 
-int get_the_escape_key_pressed(void)
+int get_the_escape_key_pressed(void)  // for selecting the escape key pressed
 {
     int c=0;
 
@@ -116,7 +115,7 @@ int get_the_escape_key_pressed(void)
 
 
 
-void start_normal_mode(){
+void start_normal_mode(){  // setting properties of normal mode and getting characters pressed
   int c;
   movecursor(cursor_position,1);
     while (true) {
@@ -156,7 +155,7 @@ void start_normal_mode(){
     }
 }
 
-void start_command_mode(){
+void start_command_mode(){  // setting properties of command mode
   initiate_command_mode();
   int c;
 
@@ -176,11 +175,11 @@ void start_command_mode(){
         else if(c==BACKSPACE){
           backspace_pressed();
         }
-        else if (c == UP) {
-           move_cursor_up_in_command_mode();
+        else if (c == UP) { // disabled
+           //move_cursor_up_in_command_mode();
         }
-        else if (c == DOWN) {
-            move_cursor_down_in_command_mode();
+        else if (c == DOWN) {  //disabled
+            //move_cursor_down_in_command_mode();
         } 
         else if (c == RIGHT) {
             move_cursor_right_in_command_mode();
@@ -195,7 +194,7 @@ void start_command_mode(){
     printf("\n");
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {  // program starts here
     clear_screen();
     printf("\e[?1049h");
     

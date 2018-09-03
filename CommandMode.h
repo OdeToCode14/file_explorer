@@ -50,7 +50,7 @@ void make_absolute_paths();
 int create_directory(string source,string destination);
 int create_file(string file_path,string destination);
 
-void move_to_directory();
+int move_to_directory();
 
 int copy_file_directory();
 

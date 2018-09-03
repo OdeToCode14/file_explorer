@@ -62,4 +62,6 @@ void move_left();
 void move_to_parent();
 
 void go_to_home();
+
+void select_a_directory(FileSystem file_clicked,int add_or_not);
 #endif
