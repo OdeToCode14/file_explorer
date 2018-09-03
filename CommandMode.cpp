@@ -28,6 +28,8 @@ vector<string> actual_command;// clear it ever time
 string space_string;
 
 string command_string;
+
+bool search_activated=false;
 void initiate_command_mode(){
 	command_mode_top=bottom+2;
     command_mode_bottom=rows;
@@ -211,8 +213,9 @@ void move_to_directory(){
 	struct stat st;
     string directory_name=get_directory_name_from_path(path);
     string parent=find_parent_path(path);
-    FileSystem dir(st,directory_name,path,parent,directory_name);	    
-	initialize(dp,directory_name,dir,add_to_traversal_list);
+    FileSystem direct(st,directory_name,path,parent,directory_name);
+    direct.type=is_directory;	    
+	initialize(dp,directory_name,direct,add_to_traversal_list);
 	initiate_command_mode();
 }
 
@@ -380,6 +383,7 @@ int search_file(string path){
 	if(search_list.size() == 0){
 		return 0;
 	}
+	search_activated=true;
 	display_search_list(search_list);
 	return 1;
 }

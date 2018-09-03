@@ -26,6 +26,8 @@ extern string space_string;
 extern int cursor_row_in_command_mode;
 extern int cursor_col_in_command_mode;
 
+
+
 void initiate_command_mode();
 void add_character_to_command(int c);
 

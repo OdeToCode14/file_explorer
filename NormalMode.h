@@ -35,6 +35,8 @@ extern int top;
 extern int display_index;
 
 extern FileSystem current_directory;
+extern vector<FileSystem> traversal_list;
+extern int traversal_point;
 
 void move_cursor_down();
 void move_cursor_up();

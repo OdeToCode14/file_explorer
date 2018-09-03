@@ -182,7 +182,7 @@ void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/
 //code for entering into directory
 
 
-void select_a_directory(FileSystem file_clicked,int add_or_not){
+void select_a_directory(FileSystem file_clicked,int add_or_not){ 
 	if(file_clicked.type == is_directory){
 		if(file_clicked.directory_path.length() < home_directory.directory_path.length()){
 			return;
@@ -210,8 +210,7 @@ void select_a_directory(FileSystem file_clicked,int add_or_not){
 		    //printf("can’t open %s\n", cwd);
 		    cout<<"can’t open "<<path<<"\n";
 		    return;
-		}
-		    
+		}   
 		initialize(dp,real_name,file_clicked,add_or_not);
 	}
 }
@@ -226,12 +225,7 @@ void enter(){
 	if(file_clicked.type == is_directory){
 		select_a_directory(file_clicked,add_to_traversal_list);
 	}
-	else{ // code for opening file
-		 /*string inp="​xdg-open "+file_clicked.directory_path;
-		  char t1[1000];
-		  strcpy(t1,inp.c_str());
-		  system(t1);*/
-		  
+	else{ 
               
 		       int pid = fork();
 				if (pid == 0) {
@@ -256,7 +250,7 @@ void move_left(){
 		return;
 	}
 	traversal_point--;
-	select_a_directory(traversal_list[traversal_point],0);	
+	select_a_directory(traversal_list[traversal_point],0);
 }
 
 void move_to_parent(){
