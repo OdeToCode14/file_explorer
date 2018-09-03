@@ -23,7 +23,7 @@ FileSystem::FileSystem(){
 
 }
 
-FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_path,string dis_name){
+FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_path,string dis_name){ // a class for storing info. about files and directories
     	st=ini;
     	file_name=name;
     	directory_path=dir_path;
@@ -31,7 +31,7 @@ FileSystem::FileSystem(struct stat ini,string name,string dir_path,string par_pa
     	display_name=dis_name;
     }
 
-void FileSystem::display(){
+void FileSystem::display(){ // for dispaying file and folder details
     	file_size = st.st_size;   
 	    modified_time=st.st_mtime;
 
@@ -41,7 +41,6 @@ void FileSystem::display(){
 	    char date[20];
 	    strftime(date, 20, "%b %d %H:%M", gmtime(&(modified_time)));
 
-	            // handling permissions https://stackoverflow.com/questions/10323060/printing-file-permissions-like-ls-l-using-stat2-in-c
 	    printf( (S_ISDIR(st.st_mode)) ? "d " : "- ");
 	    printf( (st.st_mode & S_IRUSR) ? "r" : "-");
 	    printf( (st.st_mode & S_IWUSR) ? "w" : "-");
@@ -61,13 +60,11 @@ void FileSystem::display(){
 		ss << file_size;
 		std::string str = ss.str();
 	    char *ch=create_array(string(str),10);
-	    //cout<< file_size << " --- ";
 	    cout<<ch;
 	    cout<< date <<"  ";
 
 	    ch=create_array(display_name,30);
 	    cout<<ch<<"\n";
-	    //cout<< display_name << " --- ";
 
     }
 

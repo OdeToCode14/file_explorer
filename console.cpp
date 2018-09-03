@@ -149,7 +149,7 @@ void start_normal_mode(){  // setting properties of normal mode and getting char
             go_to_home();
         }
         else if(c== 113){
-          printf("\e[?1049l");
+          printf("\e[?1049l");  // go to where application was started
           exit(0); // to avoid looping between command mode and normal mode
         }
     }

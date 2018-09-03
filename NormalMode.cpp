@@ -20,10 +20,10 @@ int cols;
               // leave two lines above one for application name other empty
               // leave three lines below one for cmd one above it one below
 int top;
-int bottom; //since first line for application display and last 2 lines for comd mode
+int bottom; //since first line for application display and last 2 lines for command mode
 int cursor_position;
-int display_index;
-struct winsize terminal_size;
+int display_index;  //stores start of the list from where files have been displayed
+struct winsize terminal_size;  // storing dimensions of terminal
 
 string root;
 
@@ -33,7 +33,7 @@ FileSystem current_directory;
 vector<FileSystem> traversal_list;
 int traversal_point=-1;
 
-void move_cursor_down(){
+void move_cursor_down(){  // handling cursor down movement in normal mode and scrolling down
 	if(display_index + cursor_position-top + 1 == file_system_list.size()){ // if there is nothing to scroll below
 		return;
 	}
@@ -45,7 +45,7 @@ void move_cursor_down(){
 		scroll_down();
 	}
 }
-void move_cursor_up(){
+void move_cursor_up(){  // handling cursor up movement in normal mode and scrolling up
 	cursor_position--;
 	if(cursor_position != top-1){
 		movecursor(cursor_position,0);
@@ -55,7 +55,7 @@ void move_cursor_up(){
 	}
 }
 
-void clear_screen(){
+void clear_screen(){  // refreshing normal mode screen
     printf("\033[H");
     printf("\033[J");
     movecursor(bottom+1,1);
@@ -66,13 +66,13 @@ void clear_screen(){
 }
 
 
-void reduce_list(){
+void reduce_list(){   // reducing traversal list when enter is pressed or backspace is pressed or goto command is used
 	for(int i=traversal_list.size()-1;i>traversal_point;i--){
 		traversal_list.pop_back();
 	}
 }
 
-void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){
+void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){   // to create list of current folder
 	if(add_or_not){
 		reduce_list();
 		traversal_list.push_back(current_dir); // to keep record of traversal sequence
@@ -82,36 +82,31 @@ void initialize(DIR *dp,string name,FileSystem current_dir,int add_or_not){
     root=name;	
     current_directory=current_dir;
 	terminal_dimensions();
-	//list_size=file_system_list.size();
 
 	rows=terminal_size.ws_row;
 	cols=terminal_size.ws_col;
-              // leave two lines above one for application name other empty
-              // leave three lines below one for cmd one above it one below
-	clear_screen();
+	clear_screen();  //refresh screen everytime
 	file_system_list=create_list(dp,current_directory);
 
-    cout<<"Current working dir: "<<root<<"\n";
+    cout<<"Current directory: "<<root<<"\n";  // display name of current directory
 	top=3;
 	bottom=rows-4; //since first line for application display and last 2 lines for comd mode
 	movecursor(top,1);
-	cursor_position=top;
+	cursor_position=top;  // cursor position maintains record of where cursor is presently on screen
 	
 	display_index=0;
 
 	display_list(file_system_list);
-	//movecursor(top,1);   //change this
-	//cursor_position=top;  //this also
 }
 
-void scroll_down(){
+void scroll_down(){  //for scrolling down
 	if(display_index+bottom-top >= file_system_list.size()){
 		movecursor(top,1);
 		cursor_position=top;
 		return;
 	}
 	clear_screen();
-    cout<<"Current working dir: "<<root<<"\n";
+    cout<<"Current directory: "<<root<<"\n";
 	 //since first line for application display and last 2 lines for comd mode
 	movecursor(top,1);
 	cursor_position=top;
@@ -120,18 +115,16 @@ void scroll_down(){
 	if(display_index < file_system_list.size()){
 		display_list(file_system_list);
 	}
-	//movecursor(top,1);
-	//cursor_position=top;
 }
 
-void scroll_up(){
+void scroll_up(){  //for scrolling up
 	if(display_index == 0){
 		movecursor(top,1);
 		cursor_position=top;
 		return;
 	}
 	clear_screen();
-    cout<<"Current working dir: "<<root<<"\n";
+    cout<<"Current directory: "<<root<<"\n";
 	 //since first line for application display and last 2 lines for comd mode
 	movecursor(top,1);
 	cursor_position=top;
@@ -145,7 +138,7 @@ void scroll_up(){
 }
 
 
-void display_list(vector<FileSystem> file_system_list){
+void display_list(vector<FileSystem> file_system_list){  //display current fitting list in terminal
 	clear_screen();
 	cout<<"Current working dir: "<<root<<"\n";
 	 //since first line for application display and last 2 lines for comd mode
@@ -165,24 +158,12 @@ void display_list(vector<FileSystem> file_system_list){
       }
 }
 
-/*
-void display_list(){      
-
-}
-*/
-void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
+void terminal_dimensions(void){  
     ioctl(0, TIOCGWINSZ, &terminal_size);
-
-    //printf ("lines %d\n", terminal_size.ws_row);
-    //printf ("columns %d\n", terminal_size.ws_col);
-    
 }
 
 
-//code for entering into directory
-
-
-void select_a_directory(FileSystem file_clicked,int add_or_not){ 
+void select_a_directory(FileSystem file_clicked,int add_or_not){ //code for entering into directory 
 	if(file_clicked.type == is_directory){
 		if(file_clicked.directory_path.length() < home_directory.directory_path.length()){
 			return;
@@ -190,10 +171,10 @@ void select_a_directory(FileSystem file_clicked,int add_or_not){
 		string path=file_clicked.directory_path;
 		string real_name=file_clicked.file_name;
 
-		if(file_clicked.file_name == "."){
+		if(file_clicked.file_name == "."){  // ignore if this is entered
 			return;
 		}
-		else if(file_clicked.file_name == ".."){
+		else if(file_clicked.file_name == ".."){  // find absolute path of parent
 			string real_path=find_directory_for_special_dot(path);
 			path=real_path;
 			real_name=get_directory_name_from_path(real_path);
@@ -207,7 +188,6 @@ void select_a_directory(FileSystem file_clicked,int add_or_not){
 		cwd[path.size()] = '\0';
 		DIR* dp;
 		if ((dp = opendir(cwd)) == NULL){
-		    //printf("can’t open %s\n", cwd);
 		    cout<<"can’t open "<<path<<"\n";
 		    return;
 		}   
@@ -217,27 +197,23 @@ void select_a_directory(FileSystem file_clicked,int add_or_not){
 
 
 
-void enter(){
-
-	
+void enter(){  // called when enter is pressed in normal mode opens directory and file
 	int pos=display_index+cursor_position-top;
 	FileSystem file_clicked=file_system_list[pos];
 	if(file_clicked.type == is_directory){
 		select_a_directory(file_clicked,add_to_traversal_list);
 	}
 	else{ 
-              
-		       int pid = fork();
-				if (pid == 0) {
-				  execl("/usr/bin/xdg-open", "xdg-open", file_clicked.directory_path.c_str(), (char *)NULL);
-				  exit(1);
-				}
-				
+		int pid = fork();
+		if (pid == 0) {
+			execl("/usr/bin/xdg-open", "xdg-open", file_clicked.directory_path.c_str(), (char *)NULL);
+			exit(1);
+		}		
 	}
 }
 
 
-void move_right(){
+void move_right(){  // handling next traversal
 	if(traversal_point == traversal_list.size()-1){
 		return;
 	}
@@ -245,7 +221,7 @@ void move_right(){
 	select_a_directory(traversal_list[traversal_point],0);
 }
 
-void move_left(){
+void move_left(){  // handling previous traversal
 	if(traversal_point == 0){
 		return;
 	}
@@ -253,7 +229,7 @@ void move_left(){
 	select_a_directory(traversal_list[traversal_point],0);
 }
 
-void move_to_parent(){
+void move_to_parent(){  // traverse to parent of current folder
 	for(FileSystem obj : traversal_list){
 		if(obj.directory_path == current_directory.parent_path){
 			select_a_directory(obj,add_to_traversal_list);
@@ -261,6 +237,6 @@ void move_to_parent(){
 		}
 	}
 }
-void go_to_home(){
+void go_to_home(){  // jump to home directory
 	select_a_directory(home_directory,add_to_traversal_list);
 }

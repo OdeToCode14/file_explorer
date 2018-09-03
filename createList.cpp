@@ -19,17 +19,14 @@
 
 #include <sys/ioctl.h> //for terminal dimensions
 
-//#include <time.h>
-
-//#define movecursor(x,y) printf("\033[%d;%dH", x,y) // move the cursor to x,y
 
 using namespace std;
 
 FileSystem home_directory;
 
-//struct winsize terminal_size;  // for terminal dimensions
 
-int check_file_or_directory(string path){
+
+int check_file_or_directory(string path){ // check if a given is file or a directory or does not exist
   struct stat st;
   if(stat(path.c_str(), &st) != 0) {
     return does_not_exist;
@@ -43,7 +40,7 @@ int check_file_or_directory(string path){
 }
 
 
-string get_directory_name_from_path(string current){
+string get_directory_name_from_path(string current){  // obtain name of file or directory from its absolute path
   string directory_name;
   int ind=current.length()-1;
   while(ind >=0 && current[ind]!='/'){
@@ -54,7 +51,7 @@ string get_directory_name_from_path(string current){
 }
 
 
-string find_directory_for_special_dot(string str){
+string find_directory_for_special_dot(string str){  // obtain absolute path of directory ..
   int count=0;
   int i;
   for(i=str.length()-1;i>=0;i--){
@@ -69,7 +66,7 @@ string find_directory_for_special_dot(string str){
   return real_path;
 }
 
-string find_parent_path(string str){
+string find_parent_path(string str){  // find absolute path of parent from given path
    int count=0;
   int i;
   for(i=str.length()-1;i>=0;i--){
@@ -86,7 +83,7 @@ string find_parent_path(string str){
 
 
 
-vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){
+vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){  // for scanning each file and directory inside a folder and preparing list
       vector<FileSystem> file_system_list;
       FileSystem opened_directory=opened_dir;
       struct dirent *dirp;
@@ -113,21 +110,17 @@ vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){
                           string real_path=find_directory_for_special_dot(path_name);
                           path_name=real_path;
                           real_name=get_directory_name_from_path(real_path);
-                          /*file_clicked.file_name=real_name;
-                          file_clicked.directory_path=real_path;*/
                           parent_path=find_parent_path(real_path);
                   }
 
                   FileSystem obj(st,real_name,path_name,parent_path,file_name);
                   obj.type=is_directory;
                   file_system_list.push_back(obj);
-                  //obj.display();
             }
             else{
                   FileSystem obj(st,file_name,path_name,opened_dir.directory_path,file_name);
                   obj.type=is_file;
                   file_system_list.push_back(obj);
-                  //obj.display();
             }
     }
     return file_system_list;
@@ -135,14 +128,8 @@ vector<FileSystem> create_list(DIR *dp,FileSystem opened_dir){
 
 
 
-/*void terminal_dimensions(void){  // https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
-    ioctl(0, TIOCGWINSZ, &terminal_size);
 
-    
-}
-*/
-
-char* create_array(string str,int size){
+char* create_array(string str,int size){ // convert string to fix sized array for well formatted display
       char *ch;
       ch=(char*) malloc(sizeof(char)*size);
       for(int i=0;i<size-1;i++){
