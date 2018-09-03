@@ -1,3 +1,6 @@
+//Roll No. 2018201099
+//Amit Tiwari
+
 
 #include "NormalMode.h"
 #include "createList.h"
@@ -140,7 +143,7 @@ void scroll_up(){  //for scrolling up
 
 void display_list(vector<FileSystem> file_system_list){  //display current fitting list in terminal
 	clear_screen();
-	cout<<"Current working dir: "<<root<<"\n";
+	cout<<"Current directory: "<<root<<"\n";
 	 //since first line for application display and last 2 lines for comd mode
 	movecursor(top,1);
 	cursor_position=top;

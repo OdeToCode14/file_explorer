@@ -1,3 +1,6 @@
+//Roll No. 2018201099
+//Amit Tiwari
+
 #ifndef NORMALMODE_H
 #define NORMALMODE_H
 

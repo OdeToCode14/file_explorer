@@ -2,6 +2,8 @@
 Developed by :Amit Tiwari
     Roll No. :2018201099
 
+Application can be compiled with 'make' . And the application can be started with ./console 
+
 Available modes
 
 Normal Mode:

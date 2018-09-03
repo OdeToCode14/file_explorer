@@ -1,3 +1,0 @@
-.:
-xy.txt	no	this.txt	Directory.h	File.cpp	Directory.cpp	uyi	
-
